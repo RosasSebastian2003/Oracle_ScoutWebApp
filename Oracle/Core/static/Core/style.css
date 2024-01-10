@@ -1,0 +1,52 @@
+:root {
+    --cerise: #E63B60;
+    --navy_blue: #06FD;
+    --persian_blue: #223BC9;
+    --midnight_blue: #151A7B;
+    --background_gray: #cfccca;
+}
+.navBar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--persian_blue);
+}
+
+.navBar li {
+    float: left;
+}
+
+.navBar li a {
+    display: block;
+
+    color: white;
+
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navBar li a:hover {
+    background-color: var(--midnight_blue);
+}
+
+footer {
+    background-color: var(--persian_blue);
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.widget_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Add this line */
+    column-gap: 2px;
+    background-color: var(--background_gray);
+    grid-auto-rows: auto;
+}
+
+.widget {
+    background-color: var(--background_gray);
+    border-radius: 10px;
+}
