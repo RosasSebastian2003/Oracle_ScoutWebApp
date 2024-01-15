@@ -1,5 +1,9 @@
 from django.shortcuts import render
-
+from team.models import Team
 # Create your views here.
 def index(request):
-    return render(request, 'Core/index.html')
+    teams = Team.objects.all() [:10]
+    
+    return render(request, 'Core/index.html', {
+        'teams': teams,
+        })

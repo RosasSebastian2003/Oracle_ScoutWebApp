@@ -7,17 +7,17 @@
         <h2 class="mb-12 text-2xl text-center">What's New?</h2>
 
         <div class="grid grid-cols-3 gap-3">
-            {% for item in items %}
+            {% for team in teams %}
                 <div>
-                    <a href="{% url 'item:details' item.id %}">
+                    <a href="#">
                         <div>
-                            <img src="{{ item.image.url}}" class="rounded-t-xl">
+                            <img src="https://www.firstinspires.org/sites/default/files/open-graph-first-logo.png" class="rounded-t-xl">
                         </div>
 
                         <div class="p-6 bg-white rounded-b-xl">
-                            <h2 class="text-2xl">{{ item.name }}</h2>
-                            <p class="text-gray-500">Price: {{ item.price }}</p>
-                            <p class="text-gray-500">{{ item.description }}</p>
+                            <h2 class="text-2xl">{{ team.name }}</h2>
+                            <p class="text-gray-500">Team Number: {{ team.number }}</p>
+                            <p class="text-gray-500">Located in: {{ team.city }}, {{ team.state_prov }} {{team.country}}</p>
                         </div>
                     </a>
                 </div>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    {% comment %} <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
         <h2 class="mb-12 text-2xl text-center">Categories</h2>
 
         <div class="grid grid-cols-3 gap-3">
@@ -40,5 +40,5 @@
                 </div>
             {% endfor %}
         </div>
-    <div>
+    <div> {% endcomment %}
 {% endblock %}

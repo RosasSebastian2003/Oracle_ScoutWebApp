@@ -1,7 +1,7 @@
 from typing import Any
 import requests
 from django.core.management.base import BaseCommand
-from Oracle.team.models import Team
+from team.models import Team
 
 class Command(BaseCommand):
     help = 'Fetches all teams participating in the year 2024 from The Blue Alliance and stores them in the database'
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         
     @staticmethod
     def get_teams_by_year(page = 0) -> None:
-        response = requests.get(Command.url + "/teams/2024/" + str(page), headers=Command.header).json()
+        response = requests.get(Command.url + "/teams/2024/" + str(page) + "/simple", headers=Command.header).json()
         
         if len(response) == 0:
             return
