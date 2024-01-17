@@ -1,0 +1,8 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <form action="{% url 'admin:correct_country_name' %}" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="apply" value="Update"> {% comment %} Button, if clicked, shows up in header as apply {% endcomment %}
+  </form>
+{% endblock %}
