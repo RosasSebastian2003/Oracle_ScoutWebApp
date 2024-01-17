@@ -25,7 +25,7 @@ class EventAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path(
-                'correct_country_name>',
+                'correct_country_name',
                 self.admin_site.admin_view(self.update_country_view),
                 name='correct_country_name',
             ),
@@ -68,15 +68,10 @@ class EventAdmin(admin.ModelAdmin):
     actions = [update_country]
     
     def update_country_view(self, request):
-        # This view is called when the user submits the form
-        # We get the selected items from the POST data
         selected_items = request.POST.getlist(ACTION_CHECKBOX_NAME)
         
-        # We get the queryset for these items
         queryset = Event.objects.filter(pk__in=selected_items)
-        logger.info(f'Queryset: {queryset}')
-        # We call the admin action with the queryset and the new country name
-        
+       
         return self.update_country(request, queryset)
     
 admin.site.register(Event, EventAdmin)
