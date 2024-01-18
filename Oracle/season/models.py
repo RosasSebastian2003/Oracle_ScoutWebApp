@@ -36,4 +36,12 @@ class Event(models.Model):
 class Match(models.Model):
     key = models.CharField(max_length=10, primary_key=True)
     
+    event = models.ForeignKey(Event, related_name = 'matches', on_delete = models.CASCADE)
+    
+    def __str__(self):
+        return self.key
+    
+    def _verbose_name_plural(self):
+        return 'Matches'
+    
 

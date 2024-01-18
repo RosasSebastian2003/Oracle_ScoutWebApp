@@ -7,7 +7,7 @@ from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 import logging
 
 # In app imports
-from .models import Season, Event
+from .models import Season, Event, Match
 from .forms import UpdateCountryForm
 
 # Register your models here.
@@ -75,3 +75,9 @@ class EventAdmin(admin.ModelAdmin):
         return self.update_country(request, queryset)
     
 admin.site.register(Event, EventAdmin)
+
+class MatchAdmin(admin.ModelAdmin):
+    list_display = ('event')
+    list_filter = ('event')
+    
+admin.site.register(Match, MatchAdmin)

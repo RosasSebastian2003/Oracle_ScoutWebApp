@@ -8,7 +8,7 @@ from season.models import Season, Event
 
 class Command(BaseCommand):
     help = 'Deletes all data fetched from The Blue Alliance'
-    
+        
     def delete(self):
         Team.objects.all().delete()
         Season.objects.all().delete()
