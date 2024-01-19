@@ -19,17 +19,17 @@ class Command(BaseCommand):
                 defaults={
                     'key': teams[0]['key'],
                     'name': teams[0]['name'],
+                    'nickname': teams[0]['nickname'],
                     'city': teams[0]['city'],
                     'state_prov': teams[0]['state_prov'],
-                    'country': teams[0]['country']
-                    
+                    'country': teams[0]['country']    
                 }
             )
             return Command.store_teams(teams[1:])
         
     @staticmethod
     def get_teams_by_year(page = 0) -> None:
-        response = requests.get(Command.url + "/teams/2024/" + str(page) + "/simple", headers=Command.header).json()
+        response = requests.get(Command.url + "/teams/2023/" + str(page) + "/simple", headers=Command.header).json()
         
         if len(response) == 0:
             return
@@ -38,8 +38,7 @@ class Command(BaseCommand):
             return Command.get_teams_by_year(page + 1)
         
     def handle(self, *args, **options):
-        return self.fetch_teams()
+        return self.get_teams_by_year()
     
-    def fetch_teams(self) -> None:
-        Command.get_teams_by_year()
+    
         

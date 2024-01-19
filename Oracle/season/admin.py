@@ -77,7 +77,7 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('event')
-    list_filter = ('event')
+    list_display = ('key', 'event',)
+    
     
 admin.site.register(Match, MatchAdmin)
