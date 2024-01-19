@@ -19,9 +19,10 @@ class Event(models.Model):
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state_prov = models.CharField(max_length=100)
-    country = models.CharField(max_length=100, null=True)
+    country = models.CharField(max_length=100, default="Null")
     
     # Time Bound Data
+    week = models.IntegerField(default=0)
     start_date = models.DateField()
     end_date = models.DateField()
     

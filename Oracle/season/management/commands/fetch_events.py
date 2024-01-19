@@ -32,92 +32,68 @@ class Command(BaseCommand):
     # Save matches to the database and group teams into alliances
     @staticmethod
     def save_matches(matches: list, event: Event) -> None:
-        if len(matches) == 0:
-            return
-        elif Command.exists(Match, key=matches[0]["key"]):
-            return Command.save_matches(matches[1:], event)
-        else:
-            match, created =Match.objects.update_or_create(
-                key = matches[0]["key"],
-                defaults={
-                    'event': event,
-                }
-            )
-            
-            blue_alliance = Team.objects.filter(key__in=matches[0]["alliances"]["blue"]["team_keys"])
-            red_alliance = Team.objects.filter(key__in=matches[0]["alliances"]["red"]["team_keys"])
-            
-            match.blue_alliance.set(blue_alliance)
-            match.red_alliance.set(red_alliance)
-            
-            return Command.save_matches(matches[1:], event)
+        for match_data in matches:
+            if not Command.exists(Match, key=match_data["key"]):
+                match, created = Match.objects.update_or_create(
+                    key = match_data["key"],
+                    defaults={
+                        'event': event,
+                    }
+                )
+           
+                blue_alliance = Team.objects.filter(key__in=match_data["alliances"]["blue"]["team_keys"])
+                # logger.info(blue_alliance)
+                match.blue_alliance.set(blue_alliance)
+                
+                red_alliance = Team.objects.filter(key__in=match_data["alliances"]["red"]["team_keys"])
+                # logger.info(red_alliance)
+                match.red_alliance.set(red_alliance)
     
     # Save teams to the database
     @staticmethod
     def save_teams_in_event(teams: list) -> None:
-        if len(teams) == 0:
-            return 
-        elif Command.exists(Team, number=teams[0]["team_number"]):
-            return Command.save_teams_in_event(teams[1:])
-        else:
+        for team in teams:
             Team.objects.update_or_create(
-                number=teams[0]["team_number"],
+                key=team["key"],
                 defaults={
-                    'key': teams[0]['key'],
-                    'name': teams[0]['name'],
-                    'nickname': teams[0]['nickname'],
-                    'city': teams[0]['city'],
-                    'state_prov': teams[0]['state_prov'],
-                    'country': teams[0]['country']    
+                    'number': team['team_number'],
+                    'name': team['name'],
+                    'nickname': team['nickname'],
+                    'city': team['city'],
+                    'state_prov': team['state_prov'],
+                    'country': team['country']    
                 }
             )
-            
-            return Command.save_teams_in_event(teams[1:])
-        
-        
-        
     
     # Save events to the database
     @staticmethod
     def save_events(events: list, season: Season) -> None:
-        if len(events) == 0:
-            return
-        elif Command.exists(Event, key=events[0]["key"]):
-            return Command.save_events(events[1:], season)
-        else:
-            event, created = Event.objects.update_or_create(
-                key = events[0]["key"],
-                defaults={
-                    'name': events[0]['name'],
-                    'city': events[0]['city'],
-                    'state_prov': events[0]['state_prov'],
-                    'country': events[0]['country'],
-                    'start_date': datetime.strptime(events[0]['start_date'], '%Y-%m-%d').date(),
-                    'end_date': datetime.strptime(events[0]['end_date'], '%Y-%m-%d').date(),
+        for event in events:
+            
+            defaults = {
+                    'name': event['name'],
+                    'week': (event['week'] + 1) if event['week'] != None else Event._meta.get_field('week').get_default(),
+                    'city': event['city'],
+                    'state_prov': event['state_prov'],
+                    'country': event['country'],
+                    'start_date': datetime.strptime(event['start_date'], '%Y-%m-%d').date(),
+                    'end_date': datetime.strptime(event['end_date'], '%Y-%m-%d').date(),
                     'season': season
                 }
+            
+            newEvent, created = Event.objects.update_or_create(
+                key = event["key"],
+                defaults=defaults
             )
             
-            try:
-                teams = requests.get(Command.url + f"/event/{events[0]['key']}/teams/simple", headers = Command.header).json()
-                Command.save_teams_in_event(teams)
-            except requests.JSONDecodeError:
-                teams = requests.get(Command.url + f"/event/{events[0]['key']}/teams/simple", headers = Command.header).json()
-                logger.info(teams.status_code)
-                logger.info(teams.text)
-            
-            try:
-                matches = requests.get(Command.url + f"/event/{events[0]['key']}/matches/simple", headers = Command.header).json()
-                Command.save_matches(matches, event)
-            except requests.JSONDecodeError:
-                matches = requests.get(Command.url + f"/event/{events[0]['key']}/matches/simple", headers = Command.header).json()
-                logger.info(matches.status_code)
-                logger.info(matches.text)
-            
-            return Command.save_events(events[1:], season)
-    
+                # teams = requests.get(Command.url + f"/event/{event['key']}/teams/simple", headers = Command.header).json()
+                # Command.save_teams_in_event(teams)
+                
+            matches = requests.get(Command.url + f"/event/{event['key']}/matches/simple", headers = Command.header).json()
+            Command.save_matches(matches, newEvent)
+                
     def get_events(self, season):
-        response = requests.get(Command.url + f"/events/{season}/simple", headers = Command.header).json()
+        response = requests.get(Command.url + f"/events/{season}", headers = Command.header).json()
         
         Command.save_events(response, Season.objects.get(year=season))
     

@@ -14,16 +14,17 @@ class Command(BaseCommand):
         if len(teams) == 0:
             return
         else:
+            defaults = {
+                'key': teams[0]['key'],
+                'name': teams[0]['name'],
+                'nickname': teams[0]['nickname'],
+                'city': teams[0]['city'] if teams[0]['city'] != None else Team._meta.get_field('city').get_default(),
+                'state_prov': teams[0]['state_prov'] if teams[0]['state_prov'] != None else Team._meta.get_field('state_prov').get_default(),
+                'country': teams[0]['country'] if teams[0]['country'] != None else Team._meta.get_field('country').get_default()
+            }
             Team.objects.update_or_create(
                 number=teams[0]["team_number"],
-                defaults={
-                    'key': teams[0]['key'],
-                    'name': teams[0]['name'],
-                    'nickname': teams[0]['nickname'],
-                    'city': teams[0]['city'],
-                    'state_prov': teams[0]['state_prov'],
-                    'country': teams[0]['country']    
-                }
+                defaults=defaults
             )
             return Command.store_teams(teams[1:])
         

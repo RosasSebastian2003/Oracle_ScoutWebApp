@@ -7,9 +7,9 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     nickname = models.CharField(max_length=100)
     
-    city = models.CharField(max_length=100)
-    state_prov = models.CharField(max_length=100)
-    country = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=100, default="Unknown")
+    state_prov = models.CharField(max_length=100, default="Unknown")
+    country = models.CharField(max_length=100, default="Unknown")
     
     class Meta:
         ordering = ['number']
