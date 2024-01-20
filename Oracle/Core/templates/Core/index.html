@@ -3,26 +3,77 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
-    <div class="mt-6 px-6 py-12 bg-blue-200 rounded-xl">
-        <h2 class="mb-12 text-2xl text-center">What's New?</h2>
-
-        <div class="grid grid-cols-3 gap-3">
-            {% for team in teams %}
-                <div>
-                    <a href="#">
-                        <div>
-                            <img src="https://www.firstinspires.org/sites/default/files/open-graph-first-logo.png" class="rounded-t-xl">
+    <div class="mt-6 px-6 py-10 bg-blue-200 rounded-xl">
+        <div class="grid grid-cols-1 grid-rows-2 gap-3">
+            <div class="px-3 py-3 bg-white rounded-lg">
+                <nav class="flex justify-around">
+                    <div x-data="{ open: false }">
+                        <button class="px-8 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Country</button>
+                     
+                        <div x-show="open" @click.outside="open = false">
+                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="p-6 bg-white rounded-b-xl">
-                            <h2 class="text-2xl">{{ team.name }}</h2>
-                            <p class="text-gray-500">Team Number: {{ team.number }}</p>
-                            <p class="text-gray-500">Located in: {{ team.city }}, {{ team.state_prov }} {{team.country}}</p>
+                    <div x-data="{ open: false }">
+                        <button class="px-8 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">City</button>
+                     
+                        <div x-show="open" @click.outside="open = false">
+                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            </div>
                         </div>
-                    </a>
+                    </div>
+
+                    <div x-data="{ open: false }">
+                        <button class="flex items-center justify-center w-40 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl" @click="open = ! open">Event</button>
+                     
+                        <div x-show="open" @click.outside="open = false">
+                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div x-data="{ open: false }">
+                        <button class="px-5 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Team</button>
+                     
+                        <div x-show="open" @click.outside="open = false">
+                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div x-data="{ open: false }">
+                        <button class="px-8 py-3 bg-red-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Submit</button>
+                     
+                        <div x-show="open" @click.outside="open = false">
+                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </nav>
+            </div>
+
+            <div class="grid grid-cols-3 grid-rows-1 gap-3">
+                <div class="bg-white rounded-lg">
+                    <h2 class="py-3 text-2xl text-center text-white font-semibold bg-blue-500 rounded-lg">Team Data</h2>
                 </div>
-            {% endfor %}
-        </div>
+
+                <div class="bg-white rounded-lg">
+                    <h2 class="py-3 text-2xl text-center text-white font-semibold bg-blue-500 rounded-lg">Categories</h2>
+                </div>
+
+                <div class="bg-white rounded-lg">
+                    <h2 class="py-3 text-2xl text-center text-white font-semibold bg-blue-500 rounded-lg">Current Ranking</h2>
+                </div>
+                
+            </div>
     </div>
 
     {% comment %} <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
