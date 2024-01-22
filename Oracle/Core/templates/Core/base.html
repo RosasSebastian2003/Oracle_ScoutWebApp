@@ -7,6 +7,10 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    {% load static%}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
     <title> {% block title%}{%endblock%} | Oracle</title>
     <!-- Add your CSS and JavaScript files here -->
@@ -40,10 +44,10 @@
             <h3 class="mb-5 font-semibold text-gray-400">Menu</h3>
 
             <ul class="space-y-2">
-                <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">About</a></li>
-                <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Contact</a></li>
-                <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Privacy Policy</a></li>
-                <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Terms of Use</a></li>
+                <li><a href="#" class="text-lg text-white hover:text-teal-700">About</a></li>
+                <li><a href="#" class="text-lg text-white hover:text-teal-700">Contact</a></li>
+                <li><a href="#" class="text-lg text-white hover:text-teal-700">Privacy Policy</a></li>
+                <li><a href="#" class="text-lg text-white hover:text-teal-700">Terms of Use</a></li>
             </ul>
         </div>
     </footer>

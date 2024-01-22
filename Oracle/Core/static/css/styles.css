@@ -1,0 +1,17 @@
+/* Buttons */
+.one_word {
+    width:  180px;
+}
+
+.many_words {
+    width:  365px;
+}
+
+/* Dropdowns */
+.event_dropdown {
+    width: 365px;
+}
+
+.one_word_dropdown {
+    width:  180px;
+}

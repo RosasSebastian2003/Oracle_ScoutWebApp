@@ -6,57 +6,73 @@
     <div class="mt-6 px-6 py-10 bg-blue-200 rounded-xl">
         <div class="grid grid-cols-1 grid-rows-2 gap-3">
             <div class="px-3 py-3 bg-white rounded-lg">
-                <nav class="flex justify-around">
+                <nav class="flex overflow-hidden justify-center space-x-6">
+                    {% comment %} City {% endcomment %}
                     <div x-data="{ open: false }">
-                        <button class="px-8 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Country</button>
+                        <button class="one_word py-3 bg-blue-500 rounded-xl text-lg font-semibold text-white" @click="open = ! open">City</button>
                      
                         <div x-show="open" @click.outside="open = false">
-                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            <div class="one_word_dropdown absolute left-15 mt-1 py-2 bg-white rounded-xl shadow-xl overflow-auto h-60">
+                                {% for city in cities %}
+                                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">{{city.city}}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
+                    {% comment %} State {% endcomment %}
                     <div x-data="{ open: false }">
-                        <button class="px-8 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">City</button>
+                        <button class="one_word py-3 bg-blue-500 rounded-xl text-lg font-semibold text-white" @click="open = ! open">State</button>
                      
                         <div x-show="open" @click.outside="open = false">
-                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            <div class="one_word_dropdown absolute left-15 mt-1 py-2 bg-white rounded-xl shadow-xl overflow-auto h-60">
+                                {% for state in states%}
+                                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">{{state.state_prov}}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
-                    <div x-data="{ open: false }">
-                        <button class="flex items-center justify-center w-40 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl" @click="open = ! open">Event</button>
+                    {% comment %} Country {% endcomment %}
+                    <div x-data="{ open: false, scroll: 0 }" x-scroll="scroll = $event.target.scrollTop" class="overflow-auto n-64">
+                        <button class="one_word py-3 bg-blue-500 rounded-xl text-lg font-semibold text-white" @click="open = ! open">Country</button>
                      
                         <div x-show="open" @click.outside="open = false">
-                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            <div class="one_word_dropdown absolute left-15 mt-1 py-2 bg-white rounded-xl shadow-xl overflow-auto h-60">
+                                {% for country in countries %}
+                                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">{{country.country}}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
+                    {% comment %} Event {% endcomment %}
                     <div x-data="{ open: false }">
-                        <button class="px-5 py-3 bg-blue-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Team</button>
+                        <button class="many_words py-3 bg-red-500 rounded-xl text-lg font-semibold text-white" @click="open = ! open">Event</button>
                      
                         <div x-show="open" @click.outside="open = false">
-                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            <div class="event_dropdown absolute left-15 mt-1 py-2 bg-white rounded-xl shadow-xl overflow-auto h-60">
+                                {% for event in event_names %}
+                                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">{{event.name}}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
+                    {% comment %} Team {% endcomment %}
                     <div x-data="{ open: false }">
-                        <button class="px-8 py-3 bg-red-500 text-lg text-white font-semibold rounded-xl " @click="open = ! open">Submit</button>
+                        <button class="one_word py-3 bg-blue-500 rounded-xl text-lg font-semibold text-white" @click="open = ! open">Team</button>
                      
                         <div x-show="open" @click.outside="open = false">
-                            <div class="absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Link #1</a>
+                            <div class="one_word_dropdown absolute left-15 mt-1 py-2 w-48 bg-white rounded-xl shadow-xl overflow-auto h-60">
+                                {% for team in teams %}
+                                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">{{team.number}}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
 
+                    <input class="py-3 bg-red-500 rounded-xl text-lg text-white font-semibold w-20" type="submit" name="apply" value="Update">
                 </nav>
             </div>
 

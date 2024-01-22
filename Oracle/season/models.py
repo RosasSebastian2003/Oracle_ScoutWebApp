@@ -33,6 +33,7 @@ class Event(models.Model):
             ['city', 'state_prov', 'country'],
             ['state_prov', 'country'],
             ['city', 'country'],
+            ['city', 'state_prov', 'country', 'name'],
         ]
         
     def __str__(self):
