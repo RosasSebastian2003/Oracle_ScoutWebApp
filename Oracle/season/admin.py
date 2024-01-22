@@ -18,6 +18,7 @@ admin.site.register(Season)
 class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'city', 'country',)
     list_filter = ('season', 'country', 'week',)
+    filter_horizontal = ('teams',)
     ordering = ('start_date', 'week',)
     
     # Register custom admin views as if we did it in urls.py

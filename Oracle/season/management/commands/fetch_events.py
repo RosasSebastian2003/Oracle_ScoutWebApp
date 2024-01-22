@@ -8,6 +8,7 @@ from season.models import Season, Event, Match
 
 from django.core.exceptions import ObjectDoesNotExist
 import logging
+import json
 
 logger = logging.getLogger('admin')
 
@@ -49,21 +50,6 @@ class Command(BaseCommand):
                 # logger.info(red_alliance)
                 match.red_alliance.set(red_alliance)
     
-    # Save teams to the database
-    @staticmethod
-    def save_teams_in_event(teams: list) -> None:
-        for team in teams:
-            Team.objects.update_or_create(
-                key=team["key"],
-                defaults={
-                    'number': team['team_number'],
-                    'name': team['name'],
-                    'nickname': team['nickname'],
-                    'city': team['city'],
-                    'state_prov': team['state_prov'],
-                    'country': team['country']    
-                }
-            )
     
     # Save events to the database
     @staticmethod
@@ -85,11 +71,17 @@ class Command(BaseCommand):
                 key = event["key"],
                 defaults=defaults
             )
-            
-                # teams = requests.get(Command.url + f"/event/{event['key']}/teams/simple", headers = Command.header).json()
-                # Command.save_teams_in_event(teams)
                 
             matches = requests.get(Command.url + f"/event/{event['key']}/matches/simple", headers = Command.header).json()
+            
+            # teams in event
+            try: 
+                team_list = requests.get(Command.url + f"/event/{event['key']}/teams/keys", headers = Command.header).json()
+                teams = Team.objects.filter(key__in=team_list)
+                newEvent.teams.set(teams)
+            except json.decoder.JSONDecodeError:
+                logger.info(f"Error: {event['key']}")
+            
             Command.save_matches(matches, newEvent)
                 
     def get_events(self, season):

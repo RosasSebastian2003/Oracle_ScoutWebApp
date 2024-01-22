@@ -26,6 +26,8 @@ class Event(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     
+    teams = models.ManyToManyField(Team, related_name = 'events')
+    
     season = models.ForeignKey(Season, related_name = 'events', on_delete = models.CASCADE)
     
     class Meta:

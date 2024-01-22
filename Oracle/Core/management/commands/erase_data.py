@@ -10,7 +10,6 @@ class Command(BaseCommand):
     help = 'Deletes all data fetched from The Blue Alliance'
         
     def delete(self):
-        Team.objects.all().delete()
         Match.objects.all().delete()
         Event.objects.all().delete()
     
