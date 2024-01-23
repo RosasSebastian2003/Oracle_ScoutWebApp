@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
@@ -19,14 +20,20 @@ def filter_objects(request):
     events_in_city = Event.objects.filter(city=option)
     
     if events_in_country.exists():
-        logger.info(f'Events in country: {events_in_country}')
-        events = events_in_country
-        events_json = serializers.serialize('json', events)
+        events = events_in_country # QuerySet
+        events_json = serializers.serialize('json', events) # str
+        event_dict = json.loads(events_json) # list of dicts
         
-        teams = Team.objects.filter(events__in=events)
-        teams_json = serializers.serialize('json', teams)
+        teams = Team.objects.filter(events__in=events) # QuerySet
+        teams_json = serializers.serialize('json', teams) # str
+        team_dict = json.loads(teams_json) # list of dicts
         
-        return JsonResponse({'events':events_json, 'teams':teams_json})
+        logger.info(f'Events in country: {event_dict}')
+        
+        response = JsonResponse({'events':event_dict, 'teams':team_dict})
+        logger.info(f'Response: {response}')
+        
+        return response
     elif events_in_state.exists():
         logger.info(f'Events in state: {events_in_state}')
         events = events_in_state

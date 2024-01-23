@@ -1,3 +1,4 @@
+
 function initializeCountryListener() {
     // Get the dropdown element through its ID
     var country_dropdown = document.getElementById("country_dropdown");
@@ -17,9 +18,13 @@ function initializeCountryListener() {
         var city_dropdown = document.getElementById("city_dropdown");
         city_dropdown.innerHTML = '';
 
-        // Get the state dropdown element through its ID
+        // Get the event dropdown element through its ID
         var event_dropdown = document.getElementById("event_dropdown");
         event_dropdown.innerHTML = '';
+
+        // Get the team dropdown element through its ID
+        var team_dropdown = document.getElementById("team_dropdown");
+        team_dropdown.innerHTML = '';
 
         // HTTP request to get the event objects for the selected country
         fetch('filter/events/teams/?option=' + selectedCountry)
@@ -35,43 +40,44 @@ function initializeCountryListener() {
 
             // Populate the all dropdowns
             events.forEach(event => {
-                if (!state_list.includes(event.state_prov)) {
-                    state_list.push(event.state_prov);
+                if (!state_list.includes(event.fields.state_prov)) {
+                    state_list.push(event.fields.state_prov);
 
-                    var state_option = document.createElement('option');
-                    state_option.value = event.state_prov;
-                    state_option.text = event.state_prov;
+                    var state_option = document.createElement('a');
+                    state_option.value = event.fields.state_prov;
+                    state_option.text = event.fields.state_prov;
                     state_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+
                     state_dropdown.appendChild(state_option);
-
-                    if (!city_list.includes(event.city)) {
-                        city_list.push(event.city);
-
-                        var city_option = document.createElement('option');
-                        city_option.value = event.city;
-                        city_option.text = event.city;
-                        city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                        city_dropdown.appendChild(city_option);
-
-                        var event_option = document.createElement('option');
-                        event_option.value = event.key;
-                        event_option.text = event.name;
-                        event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                        event_dropdown.appendChild(event_option);
-
-                        teams.forEach(team => {
-                            if (!team_list.includes(team.team_number)) {
-                                team_list.push(team.team_number);
-
-                                var team_option = document.createElement('option');
-                                team_option.value = team.team_number;
-                                team_option.text = team.team_number;
-                                team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                                team_dropdown.appendChild(team_option);
-                            }
-                        });
-                    }
                 }
+
+                if (!city_list.includes(event.fields.city)) {
+                    city_list.push(event.fields.city);
+
+                    var city_option = document.createElement('a');
+                    city_option.value = event.fields.city;
+                    city_option.text = event.fields.city;
+                    city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+                    city_dropdown.appendChild(city_option);
+                }
+
+                var event_option = document.createElement('a');
+                event_option.value = event.pk;
+                event_option.text = event.fields.name;
+                event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+                event_dropdown.appendChild(event_option);
+
+                teams.forEach(team => {
+                    if (!team_list.includes(team.pk)) {
+                        team_list.push(team.pk);
+
+                        var team_option = document.createElement('a');
+                        team_option.value = team.pk;
+                        team_option.text = team.pk;
+                        team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+                        team_dropdown.appendChild(team_option);
+                    }
+                });
             });
         });
 
