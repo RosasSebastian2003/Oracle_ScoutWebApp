@@ -1,231 +1,192 @@
 
-function initializeCountryListener() {
-    // Get the dropdown element through its ID
-    var country_dropdown = document.getElementById("country_dropdown");
 
-    // Listen for changes in the dropdown
-    country_dropdown.addEventListener('click', function(event) {
+function fetchData(data) {
+    return fetch('filter/events/teams/?option=' + data)
+    .then(response => response.json())
+    .then(data => 
+            {
+               var events = data.events;
+               var teams = data.teams; 
+
+               return {events, teams};
+            }
+         );
+}
+
+function populateStatesDropdown(event, dropdown) {    
+    var state_option = document.createElement('a');
+    state_option.value = event.fields.state_prov;
+    state_option.text = event.fields.state_prov;
+    state_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+
+    dropdown.appendChild(state_option);
+    
+}
+
+function populateCitiesDropdown(event, dropdown) {
+    var city_option = document.createElement('a');
+    city_option.value = event.fields.city;
+    city_option.text = event.fields.city;
+    city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+
+    dropdown.appendChild(city_option);
+}
+
+function populateEventsDropdown(event, dropdown) {
+    var event_option = document.createElement('a');
+    event_option.value = event.pk;
+    event_option.text = event.fields.name;
+    event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+
+    dropdown.appendChild(event_option);
+}
+
+function populateTeamsDropdown(team, dropdown) {
+    var team_option = document.createElement('a');
+    team_option.value = team.pk;
+    team_option.text = team.pk;
+    team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
+
+    dropdown.appendChild(team_option);
+}
+
+function initializeCountryListener(dropdowns) {
+    // Listen for changes in the dropdown, event parameter is handed by the browser
+
+    dropdowns['country_dropdown'].addEventListener('click', function(event) {
         event.preventDefault();
         const target = event.target;
 
         var selectedCountry = target.getAttribute('value');
+        console.log(`Country Dropdown Triggered, Selected Country: ${selectedCountry}`);
 
-        // Get the state dropdown element through its ID
-        var state_dropdown = document.getElementById("state_dropdown");
-        state_dropdown.innerHTML = '';
-
-        // Get the city dropdown element through its ID
-        var city_dropdown = document.getElementById("city_dropdown");
-        city_dropdown.innerHTML = '';
-
-        // Get the event dropdown element through its ID
-        var event_dropdown = document.getElementById("event_dropdown");
-        event_dropdown.innerHTML = '';
-
-        // Get the team dropdown element through its ID
-        var team_dropdown = document.getElementById("team_dropdown");
-        team_dropdown.innerHTML = '';
+        dropdowns['state_dropdown'].innerHTML = ''; // State Dropdown
+        dropdowns['city_dropdown'].innerHTML = ''; // City Dropdown
+        dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
+        dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
 
         // HTTP request to get the event objects for the selected country
-        fetch('filter/events/teams/?option=' + selectedCountry)
-        .then(response => response.json())
-        .then(data => {
-            var events = data.events;
-            var teams = data.teams;
+        fetchData(selectedCountry).then(({events, teams}) => {
+            // Repeat counters
+            let state_list = new Set();
+            let city_list = new Set();
+            let team_list = new Set();
 
-            // Lists for locations
-            let state_list = [];
-            let city_list = [];
-            let team_list = [];
-
-            // Populate the all dropdowns
             events.forEach(event => {
-                if (!state_list.includes(event.fields.state_prov)) {
-                    state_list.push(event.fields.state_prov);
-
-                    var state_option = document.createElement('a');
-                    state_option.value = event.fields.state_prov;
-                    state_option.text = event.fields.state_prov;
-                    state_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-
-                    state_dropdown.appendChild(state_option);
+                if (!state_list.has(event.fields.state_prov)) {
+                    state_list.add(event.fields.state_prov);
+                    populateStatesDropdown(event, dropdowns['state_dropdown']);
                 }
 
-                if (!city_list.includes(event.fields.city)) {
-                    city_list.push(event.fields.city);
-
-                    var city_option = document.createElement('a');
-                    city_option.value = event.fields.city;
-                    city_option.text = event.fields.city;
-                    city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                    city_dropdown.appendChild(city_option);
+                if (!city_list.has(event.fields.city)) {
+                    city_list.add(event.fields.city);
+                    populateCitiesDropdown(event, dropdowns['city_dropdown']);
                 }
 
-                var event_option = document.createElement('a');
-                event_option.value = event.pk;
-                event_option.text = event.fields.name;
-                event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                event_dropdown.appendChild(event_option);
+                populateEventsDropdown(event, dropdowns['event_dropdown']);
 
                 teams.forEach(team => {
-                    if (!team_list.includes(team.pk)) {
-                        team_list.push(team.pk);
-
-                        var team_option = document.createElement('a');
-                        team_option.value = team.pk;
-                        team_option.text = team.pk;
-                        team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                        team_dropdown.appendChild(team_option);
+                    if (!team_list.has(team.pk)) {
+                        team_list.add(team.pk);
+                        populateTeamsDropdown(team, dropdowns['team_dropdown']);
                     }
                 });
             });
         });
 
     });
-};
+}
 
-function initializeStateListener() {
-    var state_dropdown = document.getElementById("state_dropdown");
-    
-    state_dropdown.addEventListener('change', function() {
+function initializeStateListener(dropdowns) {
+    dropdowns['state_dropdown'].addEventListener('change', function() {
         var selectedState = this.value;
 
-        // Get the city dropdown element through its ID
-        var city_dropdown = document.getElementById("city_dropdown");
-        city_dropdown.innerHTML = '';
+        dropdowns['city_dropdown'].innerHTML = ''; // City Dropdown
+        dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
+        dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
 
-        // Get the state dropdown element through its ID
-        var event_dropdown = document.getElementById("event_dropdown");
-        event_dropdown.innerHTML = '';
+        fetchData(selectedState).then(({events, teams}) => {
+            // Repeat counters
+            let city_list = new Set();
+            let team_list = new Set();
 
-        // HTTP request to get the event objects for the selected country
-        fetch('filter/events/cities/?option=' + selectedState)
-        .then(response => response.json())
-        .then(data => {
-            var events = data.events;
-            var teams = data.teams;
-
-            // Lists for locations
-            let city_list = [];
-            let team_list = [];
-
-            // Populate the all dropdowns
             events.forEach(event => {
-                if (!city_list.includes(event.city)) {
-                    city_list.push(event.city);
-
-                    var city_option = document.createElement('option');
-                    city_option.value = event.city;
-                    city_option.text = event.city;
-                    city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                    city_dropdown.appendChild(city_option);
-
-                    var event_option = document.createElement('option');
-                    event_option.value = event.key;
-                    event_option.text = event.name;
-                    event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                    event_dropdown.appendChild(event_option);
-
-                    teams.forEach(team => {
-                        if (!team_list.includes(team.team_number)) {
-                            team_list.push(team.team_number);
-
-                            var team_option = document.createElement('option');
-                            team_option.value = team.team_number;
-                            team_option.text = team.team_number;
-                            team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                            team_dropdown.appendChild(team_option);
-                        }
-                    });
+                if (!city_list.has(event.fields.city)) {
+                    city_list.add(event.fields.city);
+                    populateCitiesDropdown(event, dropdowns['city_dropdown']);
                 }
-            });
-        });
-    });
-};
 
-function initializeCityListener() {
-    var city_dropdown = document.getElementById("city_dropdown");
-
-    city_dropdown.addEventListener('change', function() {
-        var selectedCity = this.value;
-
-        // Get the state dropdown element through its ID
-        var event_dropdown = document.getElementById("event_dropdown");
-        event_dropdown.innerHTML = '';
-
-        // HTTP request to get the event objects for the selected country
-        fetch('filter/events/events/?option=' + selectedCity)
-        .then(response => response.json())
-        .then(data => {
-            var events = data.events;
-            var teams = data.teams;
-
-            // Lists for locations
-            let team_list = [];
-
-            // Populate the all dropdowns
-            events.forEach(event => {
-                var event_option = document.createElement('option');
-                event_option.value = event.key;
-                event_option.text = event.name;
-                event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                event_dropdown.appendChild(event_option);
+                populateEventsDropdown(event, dropdowns['event_dropdown']);
 
                 teams.forEach(team => {
-                    if (!team_list.includes(team.team_number)) {
-                        team_list.push(team.team_number);
-
-                        var team_option = document.createElement('option');
-                        team_option.value = team.team_number;
-                        team_option.text = team.team_number;
-                        team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                        team_dropdown.appendChild(team_option);
+                    if (!team_list.has(team.pk)) {
+                        team_list.add(team.pk);
+                        populateTeamsDropdown(team, dropdowns['team_dropdown']);
                     }
                 });
             });
         });
     });
-};
+}
 
-function initializeEventListener() {
-    var event_dropdown = document.getElementById("event_dropdown");
+function initializeCityListener(dropdowns) {
+    dropdowns['city_dropdown'].addEventListener('change', function() {
+        var selectedCity = this.value;
 
-    event_dropdown.addEventListener('change', function() {
+        dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
+        dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
+
+        fetchData(selectedCity).then(({events, teams}) => {
+            // Repeat counters
+            let team_list = new Set();
+
+            events.forEach(event => {
+                populateEventsDropdown(event, dropdowns['event_dropdown']);
+
+                teams.forEach(team => {
+                    if (!team_list.has(team.pk)) {
+                        team_list.add(team.pk);
+                        populateTeamsDropdown(team, dropdowns['team_dropdown']);
+                    }
+                });
+            });
+        });
+    });
+}
+
+function initializeEventListener(dropdowns) {
+    dropdowns['event_dropdown'].addEventListener('change', function() {
         var selectedEvent = this.value;
 
-        // Get the state dropdown element through its ID
-        var team_dropdown = document.getElementById("team_dropdown");
-        team_dropdown.innerHTML = '';
+        dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
 
         // HTTP request to get the event objects for the selected country
-        fetch('filter/events/teams/?option=' + selectedEvent)
-        .then(response => response.json())
-        .then(data => {
-            var teams = data.teams;
+        fetchData(selectedEvent).then(({_, teams}) => {
+            // Repeat counters
+            let team_list = new Set();
 
-            // Lists for locations
-            let team_list = [];
-
-            // Populate the all dropdowns
             teams.forEach(team => {
-                if (!team_list.includes(team.team_number)) {
-                    team_list.push(team.team_number);
-
-                    var team_option = document.createElement('option');
-                    team_option.value = team.team_number;
-                    team_option.text = team.team_number;
-                    team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
-                    team_dropdown.appendChild(team_option);
+                if (!team_list.has(team.pk)) {
+                    team_list.add(team.pk);
+                    populateTeamsDropdown(team, dropdowns['team_dropdown']);
                 }
             });
         });
     });
-};
+}
 
 
 window.onload = function() {
-    initializeCountryListener();
-    initializeStateListener();
-    initializeCityListener();
-    initializeEventListener();
+    let dropdowns = {};
+
+    dropdowns['country_dropdown'] = document.getElementById("country_dropdown");
+    dropdowns['state_dropdown'] = document.getElementById("state_dropdown");
+    dropdowns['city_dropdown'] = document.getElementById("city_dropdown");
+    dropdowns['event_dropdown'] = document.getElementById("event_dropdown");
+    dropdowns['team_dropdown'] = document.getElementById("team_dropdown");
+
+    initializeCountryListener(dropdowns);
+    initializeStateListener(dropdowns);
+    initializeCityListener(dropdowns);
+    initializeEventListener(dropdowns);
 }
