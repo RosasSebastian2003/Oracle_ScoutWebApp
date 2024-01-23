@@ -22,5 +22,5 @@ from Core import views as core
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core.index, name='index'),
-    path('filter/events/teams', core.filter_objects, name='filter_events_teams'),
+    path('filter/events/teams/', core.filter_objects, name='filter_events_teams'),
 ]

@@ -4,15 +4,22 @@ from django.core import serializers
 
 from team.models import Team
 from season.models import Event, Season
+
+import logging
 # Create your views here.
+logger = logging.getLogger('admin')
+
 def filter_objects(request):
     option = request.GET.get('option')
+    
+    logger.info(f'Option: {option}')
     
     events_in_country = Event.objects.filter(country=option)
     events_in_state = Event.objects.filter(state_prov=option)
     events_in_city = Event.objects.filter(city=option)
     
     if events_in_country.exists():
+        logger.info(f'Events in country: {events_in_country}')
         events = events_in_country
         events_json = serializers.serialize('json', events)
         
@@ -21,6 +28,7 @@ def filter_objects(request):
         
         return JsonResponse({'events':events_json, 'teams':teams_json})
     elif events_in_state.exists():
+        logger.info(f'Events in state: {events_in_state}')
         events = events_in_state
         events_json = serializers.serialize('json', events)
         
@@ -29,6 +37,7 @@ def filter_objects(request):
         
         return JsonResponse({'events':events_json, 'teams':teams_json})
     elif events_in_city.exists():
+        logger.info(f'Events in city: {events_in_city}')
         events = events_in_city
         events_json = serializers.serialize('json', events)
         
