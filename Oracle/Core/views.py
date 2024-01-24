@@ -18,6 +18,7 @@ def filter_objects(request):
     events_in_country = Event.objects.filter(country=option)
     events_in_state = Event.objects.filter(state_prov=option)
     events_in_city = Event.objects.filter(city=option)
+    event = Event.objects.filter(key=option)
     
     if events_in_country.exists():
         events = events_in_country # QuerySet
@@ -38,20 +39,46 @@ def filter_objects(request):
         logger.info(f'Events in state: {events_in_state}')
         events = events_in_state
         events_json = serializers.serialize('json', events)
+        event_dict = json.loads(events_json) # list of dicts
         
         teams = Team.objects.filter(events__in=events)
         teams_json = serializers.serialize('json', teams)
+        team_dict = json.loads(teams_json) # list of dicts
         
-        return JsonResponse({'events':events_json, 'teams':teams_json})
+        response = JsonResponse({'events':event_dict, 'teams':team_dict})
+        logger.info(f'Response: {response}')
+        
+        return response
     elif events_in_city.exists():
         logger.info(f'Events in city: {events_in_city}')
         events = events_in_city
         events_json = serializers.serialize('json', events)
+        event_dict = json.loads(events_json) # list of dicts
         
         teams = Team.objects.filter(events__in=events)
         teams_json = serializers.serialize('json', teams)
+        team_dict = json.loads(teams_json) # list of dicts
+        logger.info(teams)
         
-        return JsonResponse({'events':events_json, 'teams':teams_json})
+        response = JsonResponse({'events':event_dict, 'teams':team_dict})
+        logger.info(f'Response: {response}')
+        
+        return response
+    elif event.exists():
+        logger.info(f'Event Found: {event}')
+        events = event
+        events_json = serializers.serialize('json', events)
+        event_dict = json.loads(events_json) # list of dicts
+        
+        teams = Team.objects.filter(events__in=events)
+        teams_json = serializers.serialize('json', teams)
+        team_dict = json.loads(teams_json) # list of dicts
+        logger.info(teams)
+        
+        response = JsonResponse({'events':event_dict, 'teams':team_dict})
+        logger.info(f'Response: {response}')
+        
+        return response
     else:
         return JsonResponse({'events':None, 'teams':None})
     

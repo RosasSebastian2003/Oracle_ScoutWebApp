@@ -13,6 +13,7 @@ class ScoutSheet(models.Model):
     elevator = models.BooleanField(default=False)
     shooter = models.BooleanField(default=False)
     autonomous = models.BooleanField(default=False)
+    # Dropdown on hot effective the autonomus period was
     
     zone = models.BooleanField(null=True) # true = Speaker, false = Amp
     robot_type = models.BooleanField(null=True) # true = Ofensive, false = Defensive

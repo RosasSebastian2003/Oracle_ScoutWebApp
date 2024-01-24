@@ -1,11 +1,10 @@
-
-
 function fetchData(data) {
     return fetch('filter/events/teams/?option=' + data)
     .then(response => response.json())
     .then(data => 
             {
                var events = data.events;
+
                var teams = data.teams; 
 
                return {events, teams};
@@ -15,8 +14,8 @@ function fetchData(data) {
 
 function populateStatesDropdown(event, dropdown) {    
     var state_option = document.createElement('a');
-    state_option.value = event.fields.state_prov;
-    state_option.text = event.fields.state_prov;
+    state_option.setAttribute('value', event.fields.state_prov)
+    state_option.textContent = event.fields.state_prov;
     state_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
     dropdown.appendChild(state_option);
@@ -25,8 +24,8 @@ function populateStatesDropdown(event, dropdown) {
 
 function populateCitiesDropdown(event, dropdown) {
     var city_option = document.createElement('a');
-    city_option.value = event.fields.city;
-    city_option.text = event.fields.city;
+    city_option.setAttribute('value', event.fields.city)
+    city_option.textContent = event.fields.city;
     city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
     dropdown.appendChild(city_option);
@@ -34,8 +33,8 @@ function populateCitiesDropdown(event, dropdown) {
 
 function populateEventsDropdown(event, dropdown) {
     var event_option = document.createElement('a');
-    event_option.value = event.pk;
-    event_option.text = event.fields.name;
+    event_option.setAttribute('value', event.pk)
+    event_option.textContent = event.fields.name;
     event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
     dropdown.appendChild(event_option);
@@ -43,8 +42,8 @@ function populateEventsDropdown(event, dropdown) {
 
 function populateTeamsDropdown(team, dropdown) {
     var team_option = document.createElement('a');
-    team_option.value = team.pk;
-    team_option.text = team.pk;
+    team_option.setAttribute('value', team.pk)
+    team_option.textContent = team.pk;
     team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
     dropdown.appendChild(team_option);
@@ -52,7 +51,6 @@ function populateTeamsDropdown(team, dropdown) {
 
 function initializeCountryListener(dropdowns) {
     // Listen for changes in the dropdown, event parameter is handed by the browser
-
     dropdowns['country_dropdown'].addEventListener('click', function(event) {
         event.preventDefault();
         const target = event.target;
@@ -98,15 +96,19 @@ function initializeCountryListener(dropdowns) {
 }
 
 function initializeStateListener(dropdowns) {
-    dropdowns['state_dropdown'].addEventListener('change', function() {
-        var selectedState = this.value;
+    dropdowns['state_dropdown'].addEventListener('click', async function(event) {
+        event.preventDefault();
+        const target = event.target;
+
+        var selectedState = target.getAttribute('value');
+        console.log(`State Dropdown Triggered, Selected Country: ${selectedState}`);
 
         dropdowns['city_dropdown'].innerHTML = ''; // City Dropdown
         dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
         dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
-
+        
         fetchData(selectedState).then(({events, teams}) => {
-            // Repeat counters
+            // For some reason, jsons got parsed as strings instead of objects, solved this by parsing this back to objects
             let city_list = new Set();
             let team_list = new Set();
 
@@ -117,7 +119,7 @@ function initializeStateListener(dropdowns) {
                 }
 
                 populateEventsDropdown(event, dropdowns['event_dropdown']);
-
+                
                 teams.forEach(team => {
                     if (!team_list.has(team.pk)) {
                         team_list.add(team.pk);
@@ -130,8 +132,12 @@ function initializeStateListener(dropdowns) {
 }
 
 function initializeCityListener(dropdowns) {
-    dropdowns['city_dropdown'].addEventListener('change', function() {
-        var selectedCity = this.value;
+    dropdowns['city_dropdown'].addEventListener('click', function(event) {
+        event.preventDefault();
+        const target = event.target;
+
+        var selectedCity = target.getAttribute('value');
+        console.log(`Country Dropdown Triggered, Selected City: ${selectedCity}`);
 
         dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
         dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
@@ -142,6 +148,8 @@ function initializeCityListener(dropdowns) {
 
             events.forEach(event => {
                 populateEventsDropdown(event, dropdowns['event_dropdown']);
+
+                console.log(teams.lenght)
 
                 teams.forEach(team => {
                     if (!team_list.has(team.pk)) {
@@ -155,8 +163,12 @@ function initializeCityListener(dropdowns) {
 }
 
 function initializeEventListener(dropdowns) {
-    dropdowns['event_dropdown'].addEventListener('change', function() {
-        var selectedEvent = this.value;
+    dropdowns['event_dropdown'].addEventListener('click', function(event) {
+        event.preventDefault();
+        const target = event.target;
+
+        var selectedEvent = target.getAttribute('value');
+        console.log(`Country Dropdown Triggered, Selected Country: ${selectedEvent}`);
 
         dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
 
@@ -164,6 +176,7 @@ function initializeEventListener(dropdowns) {
         fetchData(selectedEvent).then(({_, teams}) => {
             // Repeat counters
             let team_list = new Set();
+            console.log(teams)
 
             teams.forEach(team => {
                 if (!team_list.has(team.pk)) {
