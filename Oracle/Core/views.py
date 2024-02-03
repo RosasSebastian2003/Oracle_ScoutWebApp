@@ -10,6 +10,7 @@ import logging
 # Create your views here.
 logger = logging.getLogger('admin')
 
+# JS endpoint
 def filter_objects(request):
     option = request.GET.get('option')
     
@@ -81,8 +82,6 @@ def filter_objects(request):
         return response
     else:
         return JsonResponse({'events':None, 'teams':None})
-    
-
 
 def index(request):
     teams = Team.objects.all() 

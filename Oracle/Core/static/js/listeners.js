@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+    // API call to get the events and teams for the selected country
     function fetchData(data) {
         return fetch('filter/events/teams/?option=' + data)
         .then(response => response.json())
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
              );
     }
     
+    // Functions to populate the dropdowns
     function populateStatesDropdown(event, dropdown) {    
         var state_option = document.createElement('a');
         state_option.href = '#';
@@ -21,7 +23,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         state_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
         state_option.setAttribute('x-on:click.prevent', `selectedState = '${event.fields.state_prov.replace(/'/g, "\\'")}'; open = false`);
-        console.log(state_option)
 
         dropdown.appendChild(state_option);
     }
@@ -34,7 +35,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         city_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
         city_option.setAttribute('x-on:click.prevent', `selectedCity = '${event.fields.city.replace(/'/g, "\\'")}'; open = false`);
-        console.log(city_option)
     
         dropdown.appendChild(city_option);
         
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         event_option.textContent = event.fields.name;
         event_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
-        event_option.setAttribute('x-on:click.prevent', `selectedEvent = '${event.fields.name.replace(/'/g, "\\'")}'; open = false`);
+        event_option.setAttribute('x-on:click.prevent', `selectedEvent = '${event.fields.name.replace(/'/g, "\\'")}'; console.log(selectedEvent); open = false;`);
     
         dropdown.appendChild(event_option);
         
@@ -60,12 +60,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         team_option.textContent = team.pk;
         team_option.className = 'block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white';
 
-        team_option.setAttribute('x-on:click.prevent', `selectedTeam = ${team.pk}; open = false`);
-    
+        team_option.setAttribute('x-on:click.prevent', `selectedTeam = ${team.pk}; console.log(selectedTeam); open = false;`);
+
         dropdown.appendChild(team_option);
        
     }
-    
+
+    // Functions to initialize the listeners
     function initializeCountryListener(dropdowns) {
         // Listen for changes in the dropdown, event parameter is handed by the browser
         dropdowns['country_dropdown'].addEventListener('click', function(event) {
@@ -73,7 +74,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const target = event.target;
     
             var selectedCountry = target.getAttribute('value');
-            console.log(`Country Dropdown Triggered, Selected Country: ${selectedCountry}`);
     
             dropdowns['state_dropdown'].innerHTML = ''; // State Dropdown
             dropdowns['city_dropdown'].innerHTML = ''; // City Dropdown
@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const target = event.target;
     
             var selectedState = target.getAttribute('value');
-            console.log(`State Dropdown Triggered, Selected Country: ${selectedState}`);
     
             dropdowns['city_dropdown'].innerHTML = ''; // City Dropdown
             dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
@@ -156,7 +155,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const target = event.target;
     
             var selectedCity = target.getAttribute('value');
-            console.log(`Country Dropdown Triggered, Selected City: ${selectedCity}`);
     
             dropdowns['event_dropdown'].innerHTML = ''; // Event Dropdown
             dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
@@ -167,8 +165,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
                 events.forEach(event => {
                     populateEventsDropdown(event, dropdowns['event_dropdown']);
-    
-                    console.log(teams.lenght)
     
                     teams.forEach(team => {
                         if (!team_list.has(team.pk)) {
@@ -189,7 +185,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const target = event.target;
     
             var selectedEvent = target.getAttribute('value');
-            console.log(`Country Dropdown Triggered, Selected Country: ${selectedEvent}`);
     
             dropdowns['team_dropdown'].innerHTML = ''; // Team Dropdown
     
@@ -197,7 +192,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             fetchData(selectedEvent).then(({_, teams}) => {
                 // Repeat counters
                 let team_list = new Set();
-                console.log(teams)
     
                 teams.forEach(team => {
                     if (!team_list.has(team.pk)) {
@@ -206,11 +200,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     }
                 });
             });
-
             
         });
     }
-    
     
     window.onload = function() {
         let dropdowns = {};
@@ -220,11 +212,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
         dropdowns['city_dropdown'] = document.getElementById("city_dropdown");
         dropdowns['event_dropdown'] = document.getElementById("event_dropdown");
         dropdowns['team_dropdown'] = document.getElementById("team_dropdown");
-        
+
+        // Apply button listener
         initializeCountryListener(dropdowns);
         initializeStateListener(dropdowns);
         initializeCityListener(dropdowns);
         initializeEventListener(dropdowns);
+
+        document.querySelector('input[name="apply"]').addEventListener('click', function () {
+            const selectedTeam = document.getElementById("teamMain")._x_data.selectedTeam;
+            const selectedEvent = document.getElementById("eventMain")._x_data.selectedTeam;
+
+            console.log(selectedTeam.textContent)
+            console.log(selectedEvent.textContent)
+        });
     }
     
 });
