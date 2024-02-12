@@ -1,11 +1,10 @@
 <!-- FILEPATH: /Users/sebastianrosasmaciel/Desktop/puddle/puddle/core/templates/core/index.html -->
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viweport" content="width=device-width, initial-scale=1.0"> <!-- Helps make the web page mobile phone friendly -->
-
-    <script src="https://cdn.tailwindcss.com"></script>
     
     {% block static %}
     {% load static%}
@@ -13,6 +12,8 @@
     {% endblock %}
     
     <title> {% block title%}{%endblock%} | Oracle</title>
+
+    {% tailwind_css %}
     <!-- Add your CSS and JavaScript files here -->
 </head>
 <body>
