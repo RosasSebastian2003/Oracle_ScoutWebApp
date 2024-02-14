@@ -10,7 +10,7 @@ import logging
 # Create your views here.
 logger = logging.getLogger('admin')
 
-# JS endpoint
+# API endpoint
 def filter_objects(request):
     option = request.GET.get('option')
     
