@@ -10,7 +10,7 @@ from .models import Team
 # Create your views here.
 # API endpoints
 
-# Variable names matter 
+# Variable names matter, abstract classes?
 class return_all_teams(generics.ListAPIView):
     queryset = Team.objects.all()
     serializer_class =  TeamSerializer

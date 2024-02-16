@@ -1,9 +1,12 @@
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
-    path('api/events', views.return_all_events, name='get_events'),
-    path('api/events/country/<str:country>', views.return_events_in_country, name='get_events_in_country'),
-    path('api/events/state/<str:state>', views.return_events_teams_in_state, name='get_events_in_state'),
-    path('api/events/city/<str:city>', views.return_events_teams_in_city, name='get_events_in_city'),
+    path('events/all', return_all_events.as_view(), name='get_events'),
+    path('events/all/simple', return_all_events_simple.as_view(), name='get_events_simple'),
+    path('events/country/<str:country>', return_events_in_country.as_view(), name='get_events_in_country'),
+    path('events/state/<str:state>', return_events_in_state.as_view(), name='get_events_in_state'),
+    path('events/city/<str:city>', return_events_in_city.as_view(), name='get_events_in_city'),
+    path('event/<str:pk>', return_event.as_view(), name='get_event'),
+    path('event/simple/<str:pk>', return_event_simple.as_view(), name='get_event_simple'),
 ]
