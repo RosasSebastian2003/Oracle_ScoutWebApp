@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from .views import return_all_teams, return_team
 
 urlpatterns = [
-    path('api/teams', views.return_all_teams, name='get_teams'),
-    path('api/teams/<int:team_number>', views.return_team, name='get_team'),
+    path('team/all', return_all_teams.as_view(), name='get_teams'),
+    path('team/<int:pk>', return_team.as_view(), name='get_team'),
 ]

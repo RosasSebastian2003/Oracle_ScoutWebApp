@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
 
-from models import Event
+from .models import Event
 
 # Create your views here.
 # API endpoints

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     
     'Core',
     'team.apps.TeamConfig',
@@ -46,7 +47,8 @@ INSTALLED_APPS = [
     
     'tailwind',
     'theme', 
-    'django_browser_reload'
+    'django_browser_reload',
+    'drf_yasg',
 ]
 
 # Tailwind settings

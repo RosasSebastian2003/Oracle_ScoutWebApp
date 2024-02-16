@@ -8,6 +8,8 @@ django = "*"
 requests = "*"
 django-tailwind = "*"
 django-browser-reload = "*"
+drf-yasg = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
